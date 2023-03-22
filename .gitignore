@@ -6,6 +6,10 @@ __pycache__/
 # C extensions
 *.so
 
+# Data Science files
+*.bin
+*.arrow
+
 # Distribution / packaging
 .Python
 build/

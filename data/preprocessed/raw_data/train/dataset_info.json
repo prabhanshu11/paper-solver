@@ -1,0 +1,59 @@
+{
+  "citation": "",
+  "description": "",
+  "features": {
+    "id": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "tokens": {
+      "feature": {
+        "dtype": "string",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "bboxes": {
+      "feature": {
+        "feature": {
+          "dtype": "int64",
+          "_type": "Value"
+        },
+        "_type": "Sequence"
+      },
+      "_type": "Sequence"
+    },
+    "ner_tags": {
+      "feature": {
+        "names": [
+          "I-Q",
+          "E-CHART",
+          "B-SUB-SUB-Q",
+          "I-SUB-Q",
+          "E-SUBJECT NAME",
+          "B-SUB-Q",
+          "E-TABLE",
+          "B-Q",
+          "B-TABLE",
+          "B-SUBJECT NAME",
+          "E-SUB-Q",
+          "I-SUB-SUB-Q",
+          "O",
+          "E-Q",
+          "I-CHART",
+          "B-CHART",
+          "E-SUB-SUB-Q",
+          "S-CHART",
+          "I-TABLE"
+        ],
+        "_type": "ClassLabel"
+      },
+      "_type": "Sequence"
+    },
+    "image": {
+      "_type": "Image"
+    }
+  },
+  "homepage": "",
+  "license": ""
+}

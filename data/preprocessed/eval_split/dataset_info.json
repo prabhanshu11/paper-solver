@@ -1,0 +1,66 @@
+{
+  "citation": "",
+  "description": "",
+  "features": {
+    "pixel_values": {
+      "shape": [
+        3,
+        224,
+        224
+      ],
+      "dtype": "float32",
+      "_type": "Array3D"
+    },
+    "input_ids": {
+      "feature": {
+        "dtype": "int64",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "attention_mask": {
+      "feature": {
+        "dtype": "int64",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "bbox": {
+      "shape": [
+        512,
+        4
+      ],
+      "dtype": "int64",
+      "_type": "Array2D"
+    },
+    "labels": {
+      "feature": {
+        "names": [
+          "I-Q",
+          "E-CHART",
+          "B-SUB-SUB-Q",
+          "I-SUB-Q",
+          "E-SUBJECT NAME",
+          "B-SUB-Q",
+          "E-TABLE",
+          "B-Q",
+          "B-TABLE",
+          "B-SUBJECT NAME",
+          "E-SUB-Q",
+          "I-SUB-SUB-Q",
+          "O",
+          "E-Q",
+          "I-CHART",
+          "B-CHART",
+          "E-SUB-SUB-Q",
+          "S-CHART",
+          "I-TABLE"
+        ],
+        "_type": "ClassLabel"
+      },
+      "_type": "Sequence"
+    }
+  },
+  "homepage": "",
+  "license": ""
+}
