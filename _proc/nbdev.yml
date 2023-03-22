@@ -1,0 +1,9 @@
+project:
+  output-dir: _docs
+
+website:
+  title: "paper-solver"
+  site-url: "https://prabhanshu11.github.io/paper-solver"
+  description: "Upload the pdf of any K - 12 paper and get it solved using mostly free algorithms."
+  repo-branch: main
+  repo-url: "https://github.com/prabhanshu11/paper-solver"
