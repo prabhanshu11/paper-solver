@@ -58,6 +58,17 @@ INPUT_PATH = PROJECT_HOME/Path('data/doc-scanner/')
 OUTPUT_PATH = PROJECT_HOME/Path('data/preprocessed/')
 OUTPUT_PATH.mkdir(parents=True, exist_ok=True)
 
+# %% ../nbs/01_preprocess.ipynb 10
+print(f"""****************************************
+project home exist ? {PROJECT_HOME.exists()}
+contents = {[i.__str__()[3:] for i in list(PROJECT_HOME.iterdir())]}
+INPUT_PATH exist ? {INPUT_PATH.exists()}
+contents = {[i.__str__()[3:] for i in list(INPUT_PATH.iterdir())]}
+OUTPUT_PATH exist ? {OUTPUT_PATH.exists()}
+**************************************************
+""")
+
+
 # %% ../nbs/01_preprocess.ipynb 12
 files = {}
 zip_dir_name = get_zip_dir_name(INPUT_PATH)
