@@ -54,7 +54,14 @@ def filter_out_unannotated(example):
 # %% ../nbs/01_preprocess.ipynb 9
 TEST_SIZE = 0.33
 PROJECT_HOME = Path('..')
+print(f"""****************************************
+project home exist ? {PROJECT_HOME.exists()}
+contents = {[i.__str__()[3:] for i in list(PROJECT_HOME.iterdir())]}""")
+
 INPUT_PATH = PROJECT_HOME/Path('data/doc-scanner/')
+print(f"""INPUT_PATH exist ? {INPUT_PATH.exists()}
+contents = {[i.__str__()[3:] for i in list(INPUT_PATH.iterdir())]}""")
+
 OUTPUT_PATH = PROJECT_HOME/Path('data/preprocessed/')
 OUTPUT_PATH.mkdir(parents=True, exist_ok=True)
 
