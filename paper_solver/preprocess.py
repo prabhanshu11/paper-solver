@@ -2,10 +2,8 @@
 
 # %% auto 0
 __all__ = ['TEST_SIZE', 'PROJECT_HOME', 'INPUT_PATH', 'OUTPUT_PATH', 'files', 'zip_dir_name', 'images', 'words', 'bboxes',
-           'ner_tags', 'image_path', 'labels', 'id2label', 'label2id', 'dataset_dict', 'features', 'full_data_set',
-           'dataset', 'processor', 'column_names', 'image_column_name', 'text_column_name', 'boxes_column_name',
-           'label_column_name', 'train_dataset', 'eval_dataset', 'read_text_file', 'prepare_examples',
-           'get_zip_dir_name', 'filter_out_unannotated']
+           'ner_tags', 'image_path', 'labels', 'id2label', 'label2id', 'dataset_dict', 'features', 'read_text_file',
+           'prepare_examples', 'get_zip_dir_name', 'filter_out_unannotated']
 
 # %% ../nbs/01_preprocess.ipynb 5
 import pandas as pd
@@ -23,6 +21,21 @@ from typing import Union
 #warnings.filterwarnings('ignore')
 
 # %% ../nbs/01_preprocess.ipynb 7
+import pandas as pd
+import numpy as np
+import os, argparse
+from pathlib import Path
+from datasets.features import ClassLabel
+from transformers import AutoProcessor
+from sklearn.model_selection import train_test_split
+from datasets import Features, Sequence, ClassLabel, Value, Array2D, Array3D, Dataset
+from datasets import Image as Img
+from PIL import Image
+import warnings
+from typing import Union
+#warnings.filterwarnings('ignore')
+
+# %% ../nbs/01_preprocess.ipynb 8
 def read_text_file(file_path):
     with open(file_path, 'r') as f:
         return (f.readlines())
@@ -46,12 +59,11 @@ def get_zip_dir_name(data_directory: Union[str, Path]) -> Union[str, bool]:
         return zip_dir_name
     return False
 
-
 def filter_out_unannotated(example):
     tags = example['ner_tags']
     return not all([tag == label2id['O'] for tag in tags])
 
-# %% ../nbs/01_preprocess.ipynb 9
+# %% ../nbs/01_preprocess.ipynb 10
 TEST_SIZE = 0.33
 PROJECT_HOME = Path('..')
 print(f"""****************************************
@@ -64,17 +76,6 @@ contents = {[i.__str__()[3:] for i in list(INPUT_PATH.iterdir())]}""")
 
 OUTPUT_PATH = PROJECT_HOME/Path('data/preprocessed/')
 OUTPUT_PATH.mkdir(parents=True, exist_ok=True)
-
-# %% ../nbs/01_preprocess.ipynb 10
-print(f"""****************************************
-project home exist ? {PROJECT_HOME.exists()}
-contents = {[i.__str__()[3:] for i in list(PROJECT_HOME.iterdir())]}
-INPUT_PATH exist ? {INPUT_PATH.exists()}
-contents = {[i.__str__()[3:] for i in list(INPUT_PATH.iterdir())]}
-OUTPUT_PATH exist ? {OUTPUT_PATH.exists()}
-**************************************************
-""")
-
 
 # %% ../nbs/01_preprocess.ipynb 12
 files = {}
@@ -149,43 +150,40 @@ features = Features({
     'image': Img(decode=True, id=None)
 })
 
-# %% ../nbs/01_preprocess.ipynb 24
-full_data_set = Dataset.from_dict(dataset_dict, features=features)
-dataset = full_data_set.train_test_split(test_size=TEST_SIZE)
-dataset["train"] = dataset["train"].filter(filter_out_unannotated)
-processor = AutoProcessor.from_pretrained(
-    "microsoft/layoutlmv3-base", apply_ocr=False)
+# %% ../nbs/01_preprocess.ipynb 26
+if __name__ == "__main__":
+    full_data_set = Dataset.from_dict(dataset_dict, features=features)
+    dataset = full_data_set.train_test_split(test_size=TEST_SIZE)
+    dataset["train"] = dataset["train"].filter(filter_out_unannotated)
+    processor = AutoProcessor.from_pretrained(
+        "microsoft/layoutlmv3-base", apply_ocr=False)
+    features = dataset["train"].features
+    column_names = dataset["train"].column_names
+    image_column_name = "image"
+    text_column_name = "tokens"
+    boxes_column_name = "bboxes"
+    label_column_name = "ner_tags"
 
-features = dataset["train"].features
-column_names = dataset["train"].column_names
-image_column_name = "image"
-text_column_name = "tokens"
-boxes_column_name = "bboxes"
-label_column_name = "ner_tags"
-
-features = Features({
-    'pixel_values': Array3D(dtype="float32", shape=(3, 224, 224)),
-    'input_ids': Sequence(feature=Value(dtype='int64')),
-    'attention_mask': Sequence(Value(dtype='int64')),
-    'bbox': Array2D(dtype="int64", shape=(512, 4)),
-    'labels': Sequence(ClassLabel(names=labels)),
-})
-
-train_dataset = dataset["train"].map(
-    prepare_examples,
-    batched=True,
-    remove_columns=column_names,
-    features=features,
-)
-eval_dataset = dataset["test"].map(
-    prepare_examples,
-    batched=True,
-    remove_columns=column_names,
-    features=features,
-)
-train_dataset.set_format("torch")
-
-# %% ../nbs/01_preprocess.ipynb 27
-train_dataset.save_to_disk(OUTPUT_PATH/'train_split')
-eval_dataset.save_to_disk(OUTPUT_PATH/'eval_split')
-dataset.save_to_disk(OUTPUT_PATH/'raw_data')
+    features = Features({
+        'pixel_values': Array3D(dtype="float32", shape=(3, 224, 224)),
+        'input_ids': Sequence(feature=Value(dtype='int64')),
+        'attention_mask': Sequence(Value(dtype='int64')),
+        'bbox': Array2D(dtype="int64", shape=(512, 4)),
+        'labels': Sequence(ClassLabel(names=labels)),
+    })
+    train_dataset = dataset["train"].map(
+        prepare_examples,
+        batched=True,
+        remove_columns=column_names,
+        features=features,
+    )
+    eval_dataset = dataset["test"].map(
+        prepare_examples,
+        batched=True,
+        remove_columns=column_names,
+        features=features,
+    )
+    train_dataset.set_format("torch")
+    train_dataset.save_to_disk(OUTPUT_PATH/'train_split')
+    eval_dataset.save_to_disk(OUTPUT_PATH/'eval_split')
+    dataset.save_to_disk(OUTPUT_PATH/'raw_data')
