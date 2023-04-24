@@ -1,0 +1,9 @@
+Usage: sh serve_local_files.sh INPUT_DIR WILDCARD OUTPUT_FILE PORT
+This script scans INPUT_DIR directory with WILDCARD filter [all files by default],
+generates OUTPUT_FILE [files.txt by default] with a file list,
+starts web server on the port PORT [8081 by default] that serves files from INPUT_DIR
+
+Scanning ../data/preprocessed/label-studio ...
+Replacing ../data/preprocessed/label-studio to http://localhost:8081 ...
+[32mFile list stored in 'files.txt'. Now import it directly from Label Studio UI[m
+Running web server on the port 8081
